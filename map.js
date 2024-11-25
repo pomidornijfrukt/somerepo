@@ -19,14 +19,22 @@ fetch('http://localhost:8000/geomap.json')
     })
     .then(data => {
         data.features.forEach(feature => {
-            // Filter for recreational places
                 var coordinates = feature.geometry.coordinates;
                 // Convert coordinates from EPSG:3059 to EPSG:4326
                 var latlng = proj4('EPSG:3059', 'EPSG:4326', coordinates);
                 var placename = feature.properties.PLACENAME;
+                var placesubty = feature.properties.PLACESUBTY;
+                var reg_code = feature.properties.REG_CODE;
+                var lvm_distri = feature.properties.LVM_DISTRI;
+                var blockkey = feature.properties.BLOCKKEY;
                 var marker = L.marker([latlng[1], latlng[0]]).addTo(map);
-                marker.bindPopup(`<b>${placename}</b>`);
-            
+                marker.bindPopup(`
+                    <b>${placename}</b><br>
+                    Numurs: ${placesubty}<br>
+                    Kods: ${reg_code}<br>
+                    LVM_Distrikts: ${lvm_distri}<br>
+                    BlokaKods: ${blockkey}
+                `);
         });
     })
     .catch(error => console.error('Error loading the JSON data:', error));
